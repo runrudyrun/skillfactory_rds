@@ -22,14 +22,14 @@ print(os.listdir("input"))
 
 
 
-# In[2]:
+# In[3]:
 
 
 data = pd.read_csv('data.csv')
 data.sample(5)
 
 
-# In[3]:
+# In[4]:
 
 
 len(data)
@@ -37,7 +37,7 @@ len(data)
 
 # # Предобработка датасета
 
-# In[4]:
+# In[5]:
 
 
 def custom_count(df,col,sep): #эта функция нужна для того, чтобы учесть разделитель и будет использоваться далее для подсчета количества
@@ -56,7 +56,7 @@ def season(str):
     else: return 'autumn'
 
 
-# In[177]:
+# In[6]:
 
 
 answer_ls = [] # создадим список с ответами. сюда будем добавлять ответы по мере прохождения теста
@@ -75,7 +75,7 @@ data['productivity'] = data.apply(lambda x: 1 if x['profit'] > x['budget'] else 
 
 
 
-# In[63]:
+# In[7]:
 
 
 actors=[]
@@ -838,16 +838,24 @@ answer_ls.append(1)
 # 4. Adam Sandler & Kevin James
 # 5. Daniel Radcliffe & Rupert Grint
 
-# In[133]:
+# In[22]:
 
 
-def in_movie(df, name1,name2):
-    p=0
-    for actor in df.cast:
-        if (name1 in actor) & (name2 in actor) == True:
-            p+=1
-    return p
 
+df=pd.DataFrame(columns=actors_list, index=actors_list).fillna(0) 
+#создаем матрицу с именами актеров в качестве строк и столбцов,  в ячейках количество фильмов в которых они снялись вместе 
+for i in actors_list:
+    for actor in data.cast:
+        if i in actor:
+            for j in actor.split('|'):
+                if i!=j:
+                    df.loc[i,j]+=1
+
+
+# In[46]:
+
+
+df.max().sort_values(ascending = False).head(10) #первая тройка здесь узнается легко и даже навскидку понятно что за фильмы 
 
 
 # In[171]:
