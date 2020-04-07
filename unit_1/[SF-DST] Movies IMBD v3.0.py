@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[2]:
 
 
 import numpy as np
@@ -22,14 +22,14 @@ print(os.listdir("input"))
 
 
 
-# In[3]:
+# In[4]:
 
 
 data = pd.read_csv('data.csv')
 data.sample(5)
 
 
-# In[4]:
+# In[5]:
 
 
 len(data)
@@ -37,7 +37,7 @@ len(data)
 
 # # Предобработка датасета
 
-# In[5]:
+# In[23]:
 
 
 def custom_count(df,col,sep): #эта функция нужна для того, чтобы учесть разделитель и будет использоваться далее для подсчета количества
@@ -56,7 +56,7 @@ def season(str):
     else: return 'autumn'
 
 
-# In[6]:
+# In[24]:
 
 
 answer_ls = [] # создадим список с ответами. сюда будем добавлять ответы по мере прохождения теста
@@ -75,26 +75,25 @@ data['productivity'] = data.apply(lambda x: 1 if x['profit'] > x['budget'] else 
 
 
 
-# In[7]:
+# In[9]:
 
 
 actors=[]
 for cast in data.cast:
      actors+=cast.split('|')
 actors_list=list(set(actors))
-actors=pd.Series(index = actors_list) #cписок всех уникальных актеров
+actors=pd.Series(index = actors_list) #серия всех уникальных актеров, где имена в качестве индексов, а в значения записываем нужные нам параметры для сравнения
 
 companies=[]
 for company in data.production_companies:
      companies+=company.split('|')
-companies=pd.Series(index = list(set(companies))) # cписок всех уникальных студий
+companies=pd.Series(index = list(set(companies))) #серия всех уникальных студий, где названия в качестве индексов, а в значения записываем нужные нам параметры для сравнения
 
 pattern=re.compile('[0-9a-z.\!?_/#№%&()\-\+=\'\"~`$^]*')
 unique_words=[]
 for words in data.original_title:
      unique_words+=pattern.findall(words.lower())
 unique_words=pd.Series(index = list(set(unique_words)))
-unique_words
 
 
 # In[190]:
@@ -838,7 +837,7 @@ answer_ls.append(1)
 # 4. Adam Sandler & Kevin James
 # 5. Daniel Radcliffe & Rupert Grint
 
-# In[22]:
+# In[11]:
 
 
 
@@ -852,10 +851,16 @@ for i in actors_list:
                     df.loc[i,j]+=1
 
 
-# In[46]:
+# In[17]:
 
 
 df.max().sort_values(ascending = False).head(10) #первая тройка здесь узнается легко и даже навскидку понятно что за фильмы 
+
+
+# In[20]:
+
+
+len(data[data.cast.str.contains(r'(?=.*Daniel Radcliffe)(?=.*Rupert Grint)',regex=True)]) #проверяем конкретную гипотезу, получаем совпадение
 
 
 # In[171]:
@@ -872,11 +877,11 @@ answer_ls.append(5)
 # 4. Christopher Nolan
 # 5. Clint Eastwood
 
-# In[200]:
+# In[26]:
 
 
 productive = data.groupby(['director']).mean().sort_values(by = ['popularity','productivity','vote_average'], ascending = False).head(20)
-productive
+productive #Кристофер Нолан в списке выше чем остальные
 
 
 # In[ ]:
