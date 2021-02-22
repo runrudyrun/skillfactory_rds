@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  parser:
+        build:
+            context: ./parser
+        restart: always
+        volumes: 
+              - ./saves/:/usr/src/app/saves/
